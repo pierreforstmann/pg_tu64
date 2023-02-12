@@ -1,0 +1,5 @@
+# tu64 postgresql extension
+comment = 'test uint64_t'
+default_version = '0.0.1'
+module_pathname = '$libdir/tu64'
+relocatable = true 
