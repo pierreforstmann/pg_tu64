@@ -74,20 +74,29 @@ Datum tu64_test(PG_FUNCTION_ARGS)
 	PG_RETURN_BOOL ( v1 > v2 - (uint64_t)1 );
 }
 
-static int tu64_cmp_internal()
+static bool tu64_cmp_internal(size_t u1, size_t u2, size_t u3);
+
+static bool tu64_cmp_internal(uint64_t u1, uint64_t u2, uint64_t u3)
 {
-	uint64_t u1 = 32769;
-	uint64_t u2 = 32768;
-	uint64_t u3 = 1;
 	uint64_t d;
-	elog(LOG, "u1=%zu u2=%zu u3=%zu u2-u3=%zu u1>u2-u3=%d", u1, u2, u3, u2 - u3, u1 > (u2 - u3));
 	d = u2 - u3;
-	elog(LOG, "u1=%zu d=%zu u1>d=%d", u1, d, u1>d);
-	return (u1 > d);
+	if (u1 > d)
+		return true;
+	else return false;
 }
 
 Datum tu64_cmp(PG_FUNCTION_ARGS)
 {
-	return tu64_cmp_internal();
+	if(tu64_cmp_internal(32769, 32768, 1))
+	{
+		ereport(NOTICE, (errmsg("tu64_cmp returns true: OK")));
+		return true;	
+	}
+	else 
+	{
+		ereport(ERROR, (errmsg("tu64_cmp returns false: KO")));
+		return false;
+	}
+	
 }
 
